@@ -57,8 +57,7 @@ def get_kernel_reports_table_args(kernel_reports):
   ]
 
   data = []
-  rank = 1
-  for kernel in kernel_reports:
+  for rank, kernel in enumerate(kernel_reports, start=1):
     row = [
         rank,
         kernel.name,
@@ -77,8 +76,6 @@ def get_kernel_reports_table_args(kernel_reports):
         kernel.max_duration_ns / 1000,
     ]
     data.append(row)
-    rank += 1
-
   return (table_description, data, [])
 
 
@@ -102,7 +99,7 @@ def to_json(raw_data):
   kernel_stats_db.ParseFromString(raw_data)
   all_chart_tables = generate_all_chart_tables(kernel_stats_db)
   json_join = ",".join(x.ToJSon() for x in all_chart_tables)
-  return "[" + json_join + "]"
+  return f"[{json_join}]"
 
 
 def to_csv(raw_data):

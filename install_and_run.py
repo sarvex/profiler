@@ -72,17 +72,27 @@ def main():
     venv.run('pip3', 'install', '-q', '-U', 'tb-nightly')
     venv.run('pip3', 'install', '-q', '-U', 'tbp-nightly')
   else:
-    venv.run('pip3', 'install', '-q', '-U', 'tensorflow==' + args.version)
-    venv.run('pip3', 'install', '-q', '-U', 'tensorboard==' + args.version)
-    venv.run('pip3', 'install', '-q', '-U',
-             'tensorboard_plugin_profile==' + args.version)
+    venv.run('pip3', 'install', '-q', '-U', f'tensorflow=={args.version}')
+    venv.run('pip3', 'install', '-q', '-U', f'tensorboard=={args.version}')
+    venv.run(
+        'pip3',
+        'install',
+        '-q',
+        '-U',
+        f'tensorboard_plugin_profile=={args.version}',
+    )
 
   tensorboard = os.path.join(args.envdir, 'bin/tensorboard')
   # There is a bug that in Mac OS the shebang of tensorboard script is not
   # correctly updated to the python3 of the virtual env. Directly invoke with
   # python inside the virtual env to walk around.
-  venv.run('python3', tensorboard, '--logdir=' + args.logdir,
-           '--port=' + args.port, '--bind_all')
+  venv.run(
+      'python3',
+      tensorboard,
+      f'--logdir={args.logdir}',
+      f'--port={args.port}',
+      '--bind_all',
+  )
 
 
 if __name__ == '__main__':

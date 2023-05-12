@@ -74,10 +74,10 @@ class ProtoToGvizTest(tf.test.TestCase):
       kernel_report.grid_dim.extend(
           int(x) for x in MockValues.GRID_DIM.split(","))
       kernel_report.occupancy_pct = float(MockValues.OCCUPANCY_PCT)
-      kernel_report.is_op_tensor_core_eligible = \
-          "True" == MockValues.IS_OP_TENSOR_CORE_ELIGIBLE
-      kernel_report.is_kernel_using_tensor_core = \
-          "True" == MockValues.IS_KERNEL_USING_TENSOR_CORE
+      kernel_report.is_op_tensor_core_eligible = (
+          MockValues.IS_OP_TENSOR_CORE_ELIGIBLE == "True")
+      kernel_report.is_kernel_using_tensor_core = (
+          MockValues.IS_KERNEL_USING_TENSOR_CORE == "True")
       kernel_report.op_name = MockValues.OP_NAME
       kernel_report.occurrences = int(MockValues.OCCURRENCES)
       kernel_report.total_duration_ns = int(MockValues.TOTAL_DURATION_NS)
@@ -144,7 +144,7 @@ class ProtoToGvizTest(tf.test.TestCase):
           raw_value = data[rr - 1][cc]
           value_type = table_description[cc][1]
           print(raw_value)
-          print(str(expected[cc]))
+          print(expected[cc])
 
           # Only number and strings are used in our DataTable schema.
           self.assertIn(value_type, ["boolean", "number", "string"])

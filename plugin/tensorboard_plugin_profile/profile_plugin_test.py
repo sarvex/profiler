@@ -15,6 +15,7 @@
 # ==============================================================================
 """Tests for the Profile plugin."""
 
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -54,8 +55,9 @@ EXPECTED_TRACE_DATA = dict(
     metadata={'highres-ticks': True},
     traceEvents=[
         dict(ph='M', pid=0, name='process_name', args=dict(name='foo')),
-        dict(ph='M', pid=0, name='process_sort_index', args=dict(sort_index=0)),
-        dict(),
+        dict(ph='M', pid=0, name='process_sort_index',
+             args=dict(sort_index=0)),
+        {},
     ],
 )
 
@@ -142,8 +144,8 @@ class ProfilePluginTest(tf.test.TestCase):
     # Expect runs for the logdir root, 'a', and 'b/c' but not for 'b'
     # because it doesn't contain a tfevents file.
     expected = set(RUN_TO_TOOLS.keys())
-    expected.update(set('a/' + run for run in RUN_TO_TOOLS.keys()))
-    expected.update(set('b/c/' + run for run in RUN_TO_TOOLS.keys()))
+    expected.update({f'a/{run}' for run in RUN_TO_TOOLS.keys()})
+    expected.update({f'b/c/{run}' for run in RUN_TO_TOOLS.keys()})
     self.assertSetEqual(frozenset(runs.keys()), expected)
 
   def testHosts(self):

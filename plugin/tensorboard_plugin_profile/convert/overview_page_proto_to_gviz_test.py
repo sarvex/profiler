@@ -86,8 +86,8 @@ class ProtoToGvizTest(tf.test.TestCase):
 
     ProtoToGvizTest.mock_tips = []
     for tip in ["faq", "host", "device", "doc"]:
-      for idx in range(0, 3):
-        ProtoToGvizTest.mock_tips.append(MockTip(tip, tip + "_link" + str(idx)))
+      ProtoToGvizTest.mock_tips.extend(
+          MockTip(tip, f"{tip}_link{str(idx)}") for idx in range(0, 3))
 
   # Checks that DataTable columns match schema defined in table_description.
   def check_header_row(self, data, table_description, row_values):
@@ -275,10 +275,10 @@ class ProtoToGvizTest(tf.test.TestCase):
     recommendation = overview_page_pb2.OverviewPageRecommendation()
 
     for idx in range(0, 3):
-      recommendation.faq_tips.add().link = "faq_link" + str(idx)
-      recommendation.host_tips.add().link = "host_link" + str(idx)
-      recommendation.device_tips.add().link = "device_link" + str(idx)
-      recommendation.documentation_tips.add().link = "doc_link" + str(idx)
+      recommendation.faq_tips.add().link = f"faq_link{str(idx)}"
+      recommendation.host_tips.add().link = f"host_link{str(idx)}"
+      recommendation.device_tips.add().link = f"device_link{str(idx)}"
+      recommendation.documentation_tips.add().link = f"doc_link{str(idx)}"
 
     return recommendation
 

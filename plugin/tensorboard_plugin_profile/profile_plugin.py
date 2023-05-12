@@ -133,7 +133,7 @@ def make_filename(host, tool):
     The host name concatenated with the tool-specific extension, e.g.,
     'localhost.trace'.
   """
-  filename = str(host) + '.' if host else ''
+  filename = f'{str(host)}.' if host else ''
   tool = 'xplane' if use_xplane(tool) else tool
   return filename + TOOLS[tool]
 
@@ -600,7 +600,7 @@ class ProfilePlugin(base_plugin.TBPlugin):
       # TPU cluster resolver always returns port 8470. Replace it with 8466
       # on which profiler service is running.
       master_ip = master_grpc_addr.replace('grpc://', '').replace(':8470', '')
-      service_addr = master_ip + ':8466'
+      service_addr = f'{master_ip}:8466'
       # Set the master TPU for streaming trace viewer.
       self.master_tpu_unsecure_channel = master_ip
     try:
@@ -642,23 +642,23 @@ class ProfilePlugin(base_plugin.TBPlugin):
     # 1. user specify the flags master_tpu_unsecure_channel to the ip address of
     #    as "master" TPU. grpc will be used to fetch streaming trace data.
     # 2. the logdir is on google cloud storage.
-    if self.master_tpu_unsecure_channel and self.logdir.startswith('gs://'):
-      if self.stub is None:
-        # gRPC and profiler_analysis are only needed to support streaming trace
-        # viewer in Cloud TPU. This code is unused when data was produced by
-        # open-source TensorFlow. Only import the libraries when needed.
-        # pylint: disable=g-import-not-at-top
-        import grpc
-        from tensorflow.python.tpu.profiler import profiler_analysis_pb2_grpc
-        # pylint: enable=g-import-not-at-top
-        # Workaround the grpc's 4MB message limitation.
-        gigabyte = 1024 * 1024 * 1024
-        options = [('grpc.max_message_length', gigabyte),
-                   ('grpc.max_send_message_length', gigabyte),
-                   ('grpc.max_receive_message_length', gigabyte)]
-        tpu_profiler_port = self.master_tpu_unsecure_channel + ':8466'
-        channel = grpc.insecure_channel(tpu_profiler_port, options)
-        self.stub = profiler_analysis_pb2_grpc.ProfileAnalysisStub(channel)
+    if (self.master_tpu_unsecure_channel and self.logdir.startswith('gs://')
+        and self.stub is None):
+      # gRPC and profiler_analysis are only needed to support streaming trace
+      # viewer in Cloud TPU. This code is unused when data was produced by
+      # open-source TensorFlow. Only import the libraries when needed.
+      # pylint: disable=g-import-not-at-top
+      import grpc
+      from tensorflow.python.tpu.profiler import profiler_analysis_pb2_grpc
+      # pylint: enable=g-import-not-at-top
+      # Workaround the grpc's 4MB message limitation.
+      gigabyte = 1024 * 1024 * 1024
+      options = [('grpc.max_message_length', gigabyte),
+                 ('grpc.max_send_message_length', gigabyte),
+                 ('grpc.max_receive_message_length', gigabyte)]
+      tpu_profiler_port = f'{self.master_tpu_unsecure_channel}:8466'
+      channel = grpc.insecure_channel(tpu_profiler_port, options)
+      self.stub = profiler_analysis_pb2_grpc.ProfileAnalysisStub(channel)
 
   def _run_dir(self, run):
     """Helper that maps a frontend run name to a profile "run" directory.
@@ -691,7 +691,7 @@ class ProfilePlugin(base_plugin.TBPlugin):
       tb_run_directory = os.path.join(self.logdir, tb_run_name)
 
     if not tf.io.gfile.isdir(tb_run_directory):
-      raise RuntimeError('No matching run directory for run %s' % run)
+      raise RuntimeError(f'No matching run directory for run {run}')
 
     plugin_directory = plugin_asset_util.PluginDirectory(
         tb_run_directory, PLUGIN_NAME)

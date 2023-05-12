@@ -14,6 +14,7 @@
 # ==============================================================================
 """Demo data for the profile dashboard"""
 
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -22,9 +23,8 @@ RUNS = ['foo', 'bar']
 
 TRACE_ONLY = ['foo']
 
-TRACES = {}
-
-TRACES['foo'] = """
+TRACES = {
+    'foo': """
 devices { key: 2 value {
   name: 'Foo2'
   device_id: 2
@@ -56,9 +56,8 @@ trace_events {
   timestamp_ps: 90
   duration_ps: 40
 }
-"""
-
-TRACES['bar'] = """
+""",
+    'bar': """
 devices { key: 2 value {
   name: 'Bar2'
   device_id: 2
@@ -89,4 +88,5 @@ trace_events {
   name: "E2.2.1"
   timestamp_ps: 105
 }
-"""
+""",
+}

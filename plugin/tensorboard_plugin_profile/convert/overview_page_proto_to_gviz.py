@@ -68,7 +68,7 @@ def get_run_environment_table_args(run_environment):
 
   if run_environment.task_count > 0 and run_environment.host_count > 0:
     tasks_per_host = run_environment.task_count / run_environment.host_count
-    task_count += " (num tasks per host = {})".format(tasks_per_host)
+    task_count += f" (num tasks per host = {tasks_per_host})"
 
   device_core_count = "unknown"
   if run_environment.device_core_count >= 0:
@@ -76,9 +76,7 @@ def get_run_environment_table_args(run_environment):
 
   if run_environment.replica_count > 0 and \
       run_environment.num_cores_per_replica > 0:
-    device_core_count += " (Replica count = {}, num cores per replica = {})".\
-        format(run_environment.replica_count(),
-               run_environment.num_cores_per_replica())
+    device_core_count += f" (Replica count = {run_environment.replica_count()}, num cores per replica = {run_environment.num_cores_per_replica()})"
 
   custom_properties = {
       "host_count": host_count,
@@ -180,16 +178,12 @@ def get_recommendation_table_args(overview_page_recommendation):
       ("link", "string", "link"),
   ]
 
-  data = []
-  for faq_tip in overview_page_recommendation.faq_tips:
-    data.append(["faq", faq_tip.link])
-
-  for host_tip in overview_page_recommendation.host_tips:
-    data.append(["host", host_tip.link])
-
-  for device_tip in overview_page_recommendation.device_tips:
-    data.append(["device", device_tip.link])
-
+  data = [["faq", faq_tip.link]
+          for faq_tip in overview_page_recommendation.faq_tips]
+  data.extend(["host", host_tip.link]
+              for host_tip in overview_page_recommendation.host_tips)
+  data.extend(["device", device_tip.link]
+              for device_tip in overview_page_recommendation.device_tips)
   for doc_tip in overview_page_recommendation.documentation_tips:
     data.append(["doc", doc_tip.link])
 
@@ -250,4 +244,4 @@ def to_json(raw_data):
   overview_page.ParseFromString(raw_data)
   all_chart_tables = generate_all_chart_tables(overview_page)
   json_join = ",".join(x.ToJSon() if x else "{}" for x in all_chart_tables)
-  return "[" + json_join + "]"
+  return f"[{json_join}]"

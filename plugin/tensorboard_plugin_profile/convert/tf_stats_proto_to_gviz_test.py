@@ -33,8 +33,7 @@ from tensorboard_plugin_profile.protobuf import tf_stats_pb2
 class ProtoToGvizTest(tf.test.TestCase):
 
   def create_empty_stats_table(self):
-    table = tf_stats_pb2.TfStatsTable()
-    return table
+    return tf_stats_pb2.TfStatsTable()
 
   def create_mock_stats_table(self):
     table = tf_stats_pb2.TfStatsTable()

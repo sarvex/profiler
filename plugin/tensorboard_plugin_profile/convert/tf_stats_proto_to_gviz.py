@@ -112,7 +112,7 @@ def to_json(raw_data):
   tf_stats_db.ParseFromString(raw_data)
   all_chart_tables = generate_all_chart_tables(tf_stats_db)
   json_join = ",".join(x.ToJSon() for x in all_chart_tables)
-  return "[" + json_join + "]"
+  return f"[{json_join}]"
 
 
 def to_csv(raw_data):

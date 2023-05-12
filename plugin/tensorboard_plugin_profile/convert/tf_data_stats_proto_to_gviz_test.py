@@ -75,7 +75,7 @@ class ProtoToGvizTest(tf.test.TestCase):
 
   def create_mock_combined_tf_data_stats(self):
     combined_tf_data_stats = tf_data_stats_pb2.CombinedTfDataStats()
-    combined_tf_data_stats.is_input_bound = "True" == MockValues.IS_INPUT_BOUND
+    combined_tf_data_stats.is_input_bound = MockValues.IS_INPUT_BOUND == "True"
     combined_tf_data_stats.summary = MockValues.SUMMARY
 
     bottleneck_analysis = tf_data_stats_pb2.TfDataBottleneckAnalysis()
@@ -123,7 +123,7 @@ class ProtoToGvizTest(tf.test.TestCase):
     iterator_stat.start_time_ps = int(MockValues.FIRST_START_TIME_PS)
     iterator_stat.duration_ps = int(MockValues.FIRST_DURATION_PS)
     iterator_stat.self_time_ps = int(MockValues.FIRST_SELF_TIME_PS)
-    iterator_stat.is_blocking = "True" == MockValues.IS_BLOCKING
+    iterator_stat.is_blocking = MockValues.IS_BLOCKING == "True"
     iterator_stat.num_calls = int(MockValues.NUM_CALLS)
     iterator_stat = input_pipeline_stat.iterator_stats[int(
         MockValues.SECOND_ITERATOR_ID)]
@@ -131,7 +131,7 @@ class ProtoToGvizTest(tf.test.TestCase):
     iterator_stat.start_time_ps = int(MockValues.SECOND_START_TIME_PS)
     iterator_stat.duration_ps = int(MockValues.SECOND_DURATION_PS)
     iterator_stat.self_time_ps = int(MockValues.SECOND_SELF_TIME_PS)
-    iterator_stat.is_blocking = "True" == MockValues.IS_BLOCKING
+    iterator_stat.is_blocking = MockValues.IS_BLOCKING == "True"
     iterator_stat.num_calls = int(MockValues.NUM_CALLS)
 
     return combined_tf_data_stats
@@ -157,7 +157,7 @@ class ProtoToGvizTest(tf.test.TestCase):
           raw_value = data[rr - 1][cc]
           value_type = table_description[cc][1]
           print(raw_value)
-          print(str(expected[rr - 1][cc]))
+          print(expected[rr - 1][cc])
 
           # Only number and strings are used in our DataTable schema.
           self.assertIn(value_type, ["boolean", "number", "string"])

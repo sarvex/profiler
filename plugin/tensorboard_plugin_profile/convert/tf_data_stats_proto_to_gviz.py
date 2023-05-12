@@ -29,14 +29,7 @@ from tensorboard_plugin_profile.protobuf import tf_data_stats_pb2
 
 
 def format_iterator_stat(iterator_metadata, iterator_stat):
-  return ("<div style='padding: 1px;'><b>{}</b><br/><div style='text-align: "
-          "left;'>Start Time: {} us<br/>Total Duration: {} us<br/>Self "
-          "Duration: {} us<br/># Calls: {}</div></div>").format(
-              iterator_metadata.name,
-              int(iterator_stat.start_time_ps / 1000_000),
-              int(iterator_stat.duration_ps / 1000_000),
-              int(iterator_stat.self_time_ps / 1000_000),
-              iterator_stat.num_calls)
+  return f"<div style='padding: 1px;'><b>{iterator_metadata.name}</b><br/><div style='text-align: left;'>Start Time: {int(iterator_stat.start_time_ps / 1000000)} us<br/>Total Duration: {int(iterator_stat.duration_ps / 1000000)} us<br/>Self Duration: {int(iterator_stat.self_time_ps / 1000000)} us<br/># Calls: {iterator_stat.num_calls}</div></div>"
 
 
 def get_graph_table_args(combined_tf_data_stats):
@@ -63,17 +56,15 @@ def get_graph_table_args(combined_tf_data_stats):
     input_pipelines = combined_tf_data_stats.tf_data_stats[host].input_pipelines
     for input_pipeline_id in input_pipelines:
       input_pipeline_stats = input_pipelines[input_pipeline_id]
-      rank = 0
-      for input_pipeline_stat in input_pipeline_stats.stats:
+      for rank, input_pipeline_stat in enumerate(input_pipeline_stats.stats):
         for iterator_id in sorted(input_pipeline_stat.iterator_stats):
           iterator_stat = input_pipeline_stat.iterator_stats[iterator_id]
           iterator_metadata = iterator_metadata_map[iterator_id]
           blocking_type = 0
           if iterator_stat.is_blocking:
-            if iterator_id == input_pipeline_stat.bottleneck_iterator_id:
-              blocking_type = 2
-            else:
-              blocking_type = 1
+            blocking_type = (2 if iterator_id
+                             == input_pipeline_stat.bottleneck_iterator_id else
+                             1)
           row = [
               host,
               input_pipeline_stats.metadata.name,
@@ -85,7 +76,6 @@ def get_graph_table_args(combined_tf_data_stats):
               blocking_type,
           ]
           data.append(row)
-        rank += 1
   return (table_description, data, {})
 
 
@@ -202,4 +192,4 @@ def to_json(raw_data):
   combined_tf_data_stats.ParseFromString(raw_data)
   all_chart_tables = generate_all_chart_tables(combined_tf_data_stats)
   json_join = ",".join(x.ToJSon() if x else "{}" for x in all_chart_tables)
-  return "[" + json_join + "]"
+  return f"[{json_join}]"

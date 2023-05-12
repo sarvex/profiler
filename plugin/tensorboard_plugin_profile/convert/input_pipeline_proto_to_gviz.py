@@ -314,4 +314,4 @@ def to_json(raw_data):
   ipa.ParseFromString(raw_data)
   all_chart_tables = generate_all_chart_tables(ipa)
   json_join = ",".join(x.ToJSon() for x in all_chart_tables)
-  return "[" + json_join + "]"
+  return f"[{json_join}]"

@@ -54,7 +54,7 @@ def _maybe_create_directory(directory):
   try:
     os.makedirs(directory)
   except OSError:
-    print('Directory %s already exists.' % directory)
+    print(f'Directory {directory} already exists.')
 
 
 def write_empty_event_file(logdir):
@@ -82,22 +82,38 @@ def dump_data(logdir):
         f.write(proto.SerializeToString())
 
     if run not in profile_demo_data.TRACE_ONLY:
-      shutil.copyfile((DEMO_DIR + 'profile_demo.op_profile.json'),
-                      os.path.join(run_dir, 'op_profile.json'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.memory_viewer.json'),
-                      os.path.join(run_dir, 'memory_viewer.json'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.pod_viewer.json'),
-                      os.path.join(run_dir, 'pod_viewer.json'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.input_pipeline.json'),
-                      os.path.join(run_dir, 'input_pipeline.json'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.overview_page.json'),
-                      os.path.join(run_dir, 'overview_page.json'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.tensorflow_stats.pb'),
-                      os.path.join(run_dir, 'tensorflow_stats.pb'))
-      shutil.copyfile((DEMO_DIR + 'profile_demo.overview_page.pb'),
-                      os.path.join(run_dir, 'overview_page.pb')),
-      shutil.copyfile((DEMO_DIR + 'profile_demo.input_pipeline.pb'),
-                      os.path.join(run_dir, 'input_pipeline.pb'))
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.op_profile.json',
+          os.path.join(run_dir, 'op_profile.json'),
+      )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.memory_viewer.json',
+          os.path.join(run_dir, 'memory_viewer.json'),
+      )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.pod_viewer.json',
+          os.path.join(run_dir, 'pod_viewer.json'),
+      )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.input_pipeline.json',
+          os.path.join(run_dir, 'input_pipeline.json'),
+      )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.overview_page.json',
+          os.path.join(run_dir, 'overview_page.json'),
+      )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.tensorflow_stats.pb',
+          os.path.join(run_dir, 'tensorflow_stats.pb'),
+      )
+      (shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.overview_page.pb',
+          os.path.join(run_dir, 'overview_page.pb'),
+      ), )
+      shutil.copyfile(
+          f'{DEMO_DIR}profile_demo.input_pipeline.pb',
+          os.path.join(run_dir, 'input_pipeline.pb'),
+      )
 
   # Unsupported tool data should not be displayed.
   run_dir = os.path.join(plugin_logdir, 'empty')
@@ -107,9 +123,9 @@ def dump_data(logdir):
 
 
 def main(unused_argv):
-  print('Saving output to %s.' % LOGDIR)
+  print(f'Saving output to {LOGDIR}.')
   dump_data(LOGDIR)
-  print('Done. Output saved to %s.' % LOGDIR)
+  print(f'Done. Output saved to {LOGDIR}.')
 
 
 if __name__ == '__main__':

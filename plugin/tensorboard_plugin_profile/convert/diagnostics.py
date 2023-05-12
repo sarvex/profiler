@@ -37,12 +37,7 @@ def generate_diagnostics_table(diag):
   """
   table_description = [("severity", "string", "severity"),
                        ("message", "string", "message")]
-  data = []
-  for info in diag.info:
-    data.append(["INFO", info])
-  for warning in diag.warnings:
-    data.append(["WARNING", warning])
-  for error in diag.errors:
-    data.append(["ERROR", error])
-
+  data = [["INFO", info] for info in diag.info]
+  data.extend(["WARNING", warning] for warning in diag.warnings)
+  data.extend(["ERROR", error] for error in diag.errors)
   return gviz_api.DataTable(table_description, data)
